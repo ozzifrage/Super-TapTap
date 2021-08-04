@@ -35,6 +35,5 @@ class Brick {
     specialAction = startAction;
     
   }
-  
 
 };

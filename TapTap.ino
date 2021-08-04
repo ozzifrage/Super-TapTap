@@ -1,35 +1,28 @@
 #include <Gamebuino-Meta.h>
+#include "Constants.h"
 #include "Brick.cpp"
 
 const int NUM_OF_BRICKS = 4;
 
 int bricks[NUM_OF_BRICKS];
 
-
-// definitions of left and right for bricks
-const int LEFT = 1;
-const int RIGHT = 2;
-const int NO_DIRECTION = 3;
+Brick* brickStack[NUM_OF_BRICKS];
 
 int dpadInput; // input from dpad
 int score;
 
-
-
-
 Brick* bakeBrick();
-
-Color genRandColor();
+Color getRandColor();
 
 void setup() {
-  // put your setup code here, to run once:
+  
   gb.begin();
 
-  bricks[0] = random(LEFT, RIGHT + 1);
-  bricks[1] = random(LEFT, RIGHT + 1);
-  bricks[2] = random(LEFT, RIGHT + 1);
-  bricks[3] = random(LEFT, RIGHT + 1);
-
+  // populate array with brick pointers
+  for(int i = 0; i < NUM_OF_BRICKS; i ++){
+    brickStack[i] = bakeBrick(); 
+  }
+  
   dpadInput = NO_DIRECTION;
   score = 0;
 }
@@ -76,7 +69,7 @@ void loop() {
   // DRAW STEP
   gb.display.clear();
 
-  gb.display.setColor(genRandColor());
+  gb.display.setColor(getRandColor());
   if (bricks[0] == LEFT) {
     gb.display.drawRect(20, 40, 20, 10);
   }
@@ -84,7 +77,7 @@ void loop() {
     gb.display.drawRect(40, 40, 20, 10);
   }
   
-  gb.display.setColor(genRandColor());
+  gb.display.setColor(getRandColor());
   if (bricks[1] == LEFT) {
     gb.display.drawRect(20, 30, 20, 10);
   }
@@ -92,7 +85,7 @@ void loop() {
     gb.display.drawRect(40, 30, 20, 10);
   }
   
-  gb.display.setColor(genRandColor());
+  gb.display.setColor(getRandColor());
   if (bricks[2] == LEFT) {
     gb.display.drawRect(20, 20, 20, 10);
   }
@@ -100,7 +93,7 @@ void loop() {
     gb.display.drawRect(40, 20, 20, 10);
   }
 
-  gb.display.setColor(genRandColor());
+  gb.display.setColor(getRandColor());
   if (bricks[3] == LEFT) {
     gb.display.drawRect(20, 10, 20, 10);
   }
@@ -112,20 +105,8 @@ void loop() {
 
 }
 
-// HELPER FUNCTIONS
-
-// make and return reference to a new brick object
-Brick* bakeBrick(){
-
-  int newDir = random(LEFT, RIGHT + 1);
-  Color newCol = genRandColor();
-  Button newAction = BUTTON_A;
-  Brick* newBrickptr = new Brick(newDir, newCol, newAction);
-  return newBrickptr;
-}
-
 // decide on a random color, return it
-Color genRandColor(){
+Color getRandColor(){
 
   switch(random(0,11)){
     case 0:
@@ -164,4 +145,14 @@ Color genRandColor(){
     
   }
   return GRAY;
+}
+
+// make and return reference to a new brick object
+Brick* bakeBrick(){
+
+  int newDir = random(LEFT, RIGHT + 1);
+  Color newCol = getRandColor();
+  Button newAction = BUTTON_A;
+  Brick* newBrickptr = new Brick(newDir, newCol, newAction);
+  return newBrickptr;
 }
