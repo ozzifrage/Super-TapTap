@@ -4,6 +4,7 @@ const int NUM_OF_BRICKS = 4;
 
 int bricks[NUM_OF_BRICKS];
 
+
 // definitions of left and right for bricks
 const int LEFT = 1;
 const int RIGHT = 2;
@@ -11,6 +12,8 @@ const int NO_DIRECTION = 3;
 
 int dpadInput; // input from dpad
 int score;
+
+Color genRandColor();
 
 void setup() {
   // put your setup code here, to run once:
@@ -67,25 +70,31 @@ void loop() {
   // DRAW STEP
   gb.display.clear();
 
-
+  gb.display.setColor(genRandColor());
   if (bricks[0] == LEFT) {
     gb.display.drawRect(20, 40, 20, 10);
   }
   else {  // RIGHT
     gb.display.drawRect(40, 40, 20, 10);
   }
+  
+  gb.display.setColor(genRandColor());
   if (bricks[1] == LEFT) {
     gb.display.drawRect(20, 30, 20, 10);
   }
   else {  // RIGHT
     gb.display.drawRect(40, 30, 20, 10);
   }
+  
+  gb.display.setColor(genRandColor());
   if (bricks[2] == LEFT) {
     gb.display.drawRect(20, 20, 20, 10);
   }
   else {  // RIGHTRIGHT
     gb.display.drawRect(40, 20, 20, 10);
   }
+
+  gb.display.setColor(genRandColor());
   if (bricks[3] == LEFT) {
     gb.display.drawRect(20, 10, 20, 10);
   }
@@ -95,4 +104,47 @@ void loop() {
 
   gb.display.print(score);
 
+}
+
+// HELPER FUNCTIONS
+
+Color genRandColor(){
+
+  switch(random(0,16)){
+    case 0:
+      return WHITE;
+      break;
+    case 1:
+      return PINK;
+      break;
+    case 2:
+      return RED;
+      break;
+    case 3:
+      return ORANGE;
+      break;
+    case 4:
+      return YELLOW;
+      break;
+    case 5:
+      return LIGHTGREEN;
+      break;
+    case 6:
+      return PURPLE;
+      break;
+    case 7:
+      return LIGHTBLUE;
+      break;
+    case 8:
+      return BLUE;
+      break;
+    case 9:
+      return BEIGE;
+      break;
+    case 10:
+      return GREEN;
+      break;
+    
+  }
+  return GRAY;
 }
