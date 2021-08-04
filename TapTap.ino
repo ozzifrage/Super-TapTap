@@ -1,4 +1,5 @@
 #include <Gamebuino-Meta.h>
+#include "Brick.cpp"
 
 const int NUM_OF_BRICKS = 4;
 
@@ -12,6 +13,11 @@ const int NO_DIRECTION = 3;
 
 int dpadInput; // input from dpad
 int score;
+
+
+
+
+Brick* bakeBrick();
 
 Color genRandColor();
 
@@ -108,9 +114,20 @@ void loop() {
 
 // HELPER FUNCTIONS
 
+// make and return reference to a new brick object
+Brick* bakeBrick(){
+
+  int newDir = random(LEFT, RIGHT + 1);
+  Color newCol = genRandColor();
+  Button newAction = BUTTON_A;
+  Brick* newBrickptr = new Brick(newDir, newCol, newAction);
+  return newBrickptr;
+}
+
+// decide on a random color, return it
 Color genRandColor(){
 
-  switch(random(0,16)){
+  switch(random(0,11)){
     case 0:
       return WHITE;
       break;
