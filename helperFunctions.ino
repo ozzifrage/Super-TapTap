@@ -1,7 +1,7 @@
 // decide on a random color, return it
-Color getRandColor(){
+Color getRandColor() {
 
-  switch(random(0,11)){
+  switch (random(0, 11)) {
     case 0:
       return WHITE;
       break;
@@ -35,17 +35,33 @@ Color getRandColor(){
     case 10:
       return GREEN;
       break;
-    
+
   }
   return GRAY;
 }
 
 // make and return reference to a new brick object
-Brick* bakeBrick(){
+Brick* bakeBrick() {
 
   int newDir = random(LEFT, RIGHT + 1);
   Color newCol = getRandColor();
   Button newAction = BUTTON_A;
   Brick* newBrickptr = new Brick(newDir, newCol, newAction);
   return newBrickptr;
+}
+
+// reset game state, make new starting bricks
+
+void Regenerate() {
+
+  // populate array with brick pointers
+  for (int i = 0; i < NUM_OF_BRICKS; i ++) {
+    brickStack[i] = bakeBrick();
+  }
+
+  // default values
+  dpadInput = NO_DIRECTION;
+  score = 0;
+  towerHeight = 0;
+  timer = MAX_TIMER;
 }
