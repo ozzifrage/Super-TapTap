@@ -2,16 +2,19 @@
 #include "Constants.h"
 #include "Brick.cpp"
 
-const int NUM_OF_BRICKS = 4;
-
-Brick* brickStack[NUM_OF_BRICKS];
-
 int dpadInput; // input from dpad
 int score;
+int towerHeight;
+int timer; // time until fail, reset on hit brick, lowers with height
+Brick* brickStack[NUM_OF_BRICKS];
 
 // function prototypes
 Brick* bakeBrick();
 Color getRandColor();
+
+// possible gamemodes: centennial (highest score with 100 bricks)
+//                     time attack (fastest time for 50 bricks)
+//                     free play (highest score, period)
 
 // startup procedures
 void setup() {
@@ -26,6 +29,8 @@ void setup() {
   // default values
   dpadInput = NO_DIRECTION;
   score = 0;
+  towerHeight = 0;
+  timer = MAX_TIMER;
 }
 
 void loop() {
@@ -45,23 +50,31 @@ void loop() {
     score --;
   }
 
+  // timer procedure
+  if (timer > 0){
+    timer --;
+  }
+
   // if input pressed, check direction for score
   if (dpadInput != NO_DIRECTION) {
 
-    if (brickStack[0]->getPosition() == dpadInput) {
+    if (brickStack[0] -> getPosition() == dpadInput) {
       // correct input
       score += 15;
-
+      towerHeight ++;
       delete brickStack[0];
       brickStack[0] = brickStack[1];
       brickStack[1] = brickStack[2];
       brickStack[2] = brickStack[3];
       brickStack[3] = bakeBrick();
+      timer = MAX_TIMER;
 
 
     } else {
       // bad input, lost game
       score = 0;
+      towerHeight = 0;
+      timer = MAX_TIMER;
     }
     // flush input for next tick
     dpadInput = NO_DIRECTION;
@@ -71,91 +84,57 @@ void loop() {
   // DRAW STEP
   gb.display.clear();
 
-  gb.display.setColor(brickStack[0]->getPaint());
-  if (brickStack[0]->getPosition() == LEFT) {
-    gb.display.drawRect(20, 40, 20, 10);
-  }
-  else {  // RIGHT
-    gb.display.drawRect(40, 40, 20, 10);
-  }
-  
-  gb.display.setColor(brickStack[1]->getPaint());
-  if (brickStack[1]->getPosition() == LEFT) {
-    gb.display.drawRect(20, 30, 20, 10);
-  }
-  else {  // RIGHT
-    gb.display.drawRect(40, 30, 20, 10);
-  }
-  
-  gb.display.setColor(brickStack[2]->getPaint());
-  if (brickStack[2]->getPosition() == LEFT) {
-    gb.display.drawRect(20, 20, 20, 10);
-  }
-  else {  // RIGHTRIGHT
-    gb.display.drawRect(40, 20, 20, 10);
-  }
-
-  gb.display.setColor(brickStack[3]->getPaint());
-  if (brickStack[3]->getPosition() == LEFT) {
-    gb.display.drawRect(20, 10, 20, 10);
-  }
-  else {  // RIGHT
-    gb.display.drawRect(40, 10, 20, 10);
-  }
-
+  // draw score
   gb.display.setColor(WHITE);
+  gb.display.setCursor(0,0);
+  gb.display.setFontSize(1);
   gb.display.print(score);
 
-}
+  // draw height
+  gb.display.setColor(DARKGRAY);
+  gb.display.setCursor(0,10);
+  gb.display.setFontSize(1);
+  gb.display.print(towerHeight);
 
-// decide on a random color, return it
-Color getRandColor(){
+  // draw timer
+  gb.display.setColor(DARKGRAY);
+  gb.display.fillRect(gb.display.width() / 2, gb.display.height() - 1, timer, 2);
+  gb.display.fillRect(gb.display.width() / 2 - timer, gb.display.height() - 1, timer, 2);
 
-  switch(random(0,11)){
-    case 0:
-      return WHITE;
-      break;
-    case 1:
-      return PINK;
-      break;
-    case 2:
-      return RED;
-      break;
-    case 3:
-      return ORANGE;
-      break;
-    case 4:
-      return YELLOW;
-      break;
-    case 5:
-      return LIGHTGREEN;
-      break;
-    case 6:
-      return PURPLE;
-      break;
-    case 7:
-      return LIGHTBLUE;
-      break;
-    case 8:
-      return BLUE;
-      break;
-    case 9:
-      return BEIGE;
-      break;
-    case 10:
-      return GREEN;
-      break;
-    
+  // first brick
+  gb.display.setColor(brickStack[0] -> getPaint());
+  if (brickStack[0]->getPosition() == LEFT) {
+    gb.display.fillRect(20, 40, 20, 10);
   }
-  return GRAY;
-}
+  else {  // RIGHT
+    gb.display.fillRect(40, 40, 20, 10);
+  }
 
-// make and return reference to a new brick object
-Brick* bakeBrick(){
+  // second brick
+  gb.display.setColor(brickStack[1] -> getPaint());
+  if (brickStack[1]->getPosition() == LEFT) {
+    gb.display.fillRect(20, 30, 20, 10);
+  }
+  else {  // RIGHT
+    gb.display.fillRect(40, 30, 20, 10);
+  }
 
-  int newDir = random(LEFT, RIGHT + 1);
-  Color newCol = getRandColor();
-  Button newAction = BUTTON_A;
-  Brick* newBrickptr = new Brick(newDir, newCol, newAction);
-  return newBrickptr;
+  // third brick
+  gb.display.setColor(brickStack[2] -> getPaint());
+  if (brickStack[2]->getPosition() == LEFT) {
+    gb.display.fillRect(20, 20, 20, 10);
+  }
+  else {  // RIGHTRIGHT
+    gb.display.fillRect(40, 20, 20, 10);
+  }
+
+  // fourth brick
+  gb.display.setColor(brickStack[3] -> getPaint());
+  if (brickStack[3]->getPosition() == LEFT) {
+    gb.display.fillRect(20, 10, 20, 10);
+  }
+  else {  // RIGHT
+    gb.display.fillRect(40, 10, 20, 10);
+  }
+  
 }
