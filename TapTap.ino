@@ -4,16 +4,16 @@
 
 const int NUM_OF_BRICKS = 4;
 
-int bricks[NUM_OF_BRICKS];
-
 Brick* brickStack[NUM_OF_BRICKS];
 
 int dpadInput; // input from dpad
 int score;
 
+// function prototypes
 Brick* bakeBrick();
 Color getRandColor();
 
+// startup procedures
 void setup() {
   
   gb.begin();
@@ -22,7 +22,8 @@ void setup() {
   for(int i = 0; i < NUM_OF_BRICKS; i ++){
     brickStack[i] = bakeBrick(); 
   }
-  
+
+  // default values
   dpadInput = NO_DIRECTION;
   score = 0;
 }
@@ -47,14 +48,15 @@ void loop() {
   // if input pressed, check direction for score
   if (dpadInput != NO_DIRECTION) {
 
-    if (bricks[0]  == dpadInput) {
+    if (brickStack[0]->getPosition() == dpadInput) {
       // correct input
       score += 15;
 
-      bricks[0] = bricks[1];
-      bricks[1] = bricks[2];
-      bricks[2] = bricks[3];
-      bricks[3] = random(LEFT, RIGHT + 1);
+      delete brickStack[0];
+      brickStack[0] = brickStack[1];
+      brickStack[1] = brickStack[2];
+      brickStack[2] = brickStack[3];
+      brickStack[3] = bakeBrick();
 
 
     } else {
@@ -69,38 +71,39 @@ void loop() {
   // DRAW STEP
   gb.display.clear();
 
-  gb.display.setColor(getRandColor());
-  if (bricks[0] == LEFT) {
+  gb.display.setColor(brickStack[0]->getPaint());
+  if (brickStack[0]->getPosition() == LEFT) {
     gb.display.drawRect(20, 40, 20, 10);
   }
   else {  // RIGHT
     gb.display.drawRect(40, 40, 20, 10);
   }
   
-  gb.display.setColor(getRandColor());
-  if (bricks[1] == LEFT) {
+  gb.display.setColor(brickStack[1]->getPaint());
+  if (brickStack[1]->getPosition() == LEFT) {
     gb.display.drawRect(20, 30, 20, 10);
   }
   else {  // RIGHT
     gb.display.drawRect(40, 30, 20, 10);
   }
   
-  gb.display.setColor(getRandColor());
-  if (bricks[2] == LEFT) {
+  gb.display.setColor(brickStack[2]->getPaint());
+  if (brickStack[2]->getPosition() == LEFT) {
     gb.display.drawRect(20, 20, 20, 10);
   }
   else {  // RIGHTRIGHT
     gb.display.drawRect(40, 20, 20, 10);
   }
 
-  gb.display.setColor(getRandColor());
-  if (bricks[3] == LEFT) {
+  gb.display.setColor(brickStack[3]->getPaint());
+  if (brickStack[3]->getPosition() == LEFT) {
     gb.display.drawRect(20, 10, 20, 10);
   }
   else {  // RIGHT
     gb.display.drawRect(40, 10, 20, 10);
   }
 
+  gb.display.setColor(WHITE);
   gb.display.print(score);
 
 }
