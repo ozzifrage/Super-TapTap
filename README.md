@@ -13,3 +13,4 @@ New features include:
 Planned features:
 * Additional inputs to break harder blocks
 * High score and saving
+* Audio and particles when breaking a block
